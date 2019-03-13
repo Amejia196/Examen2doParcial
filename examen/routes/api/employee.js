@@ -18,7 +18,7 @@ function initEmployee(db) {
    */
 
   router.get('/all', (req, res, next) => {
-    employeeModel.getEmployees(
+    empModel.getEmployees(
       function(err, docs){
         if(err) {
           console.log(err);
@@ -30,7 +30,7 @@ function initEmployee(db) {
   });
 
   router.get('/byid/:id', (req, res, next)=>{
-    employeeModel.getEmployeesById(req.params.id, (err, Doc)=>{
+    empModel.getEmployeesById(req.params.id, (err, Doc)=>{
       if(err){
         console.log(err);
         return res.status(500).json({"error":"Erro"});
@@ -40,7 +40,7 @@ function initEmployee(db) {
   });
 
   router.get('/bycompany/:company', (req, res, next)=>{
-    employeeModel.getEmployeesByCompany(req.params.id, (err, Doc)=>{
+    empModel.getEmployeesByCompany(req.params.id, (err, Doc)=>{
       if(err){
         console.log(err);
         return res.status(500).json({"error":"Error"});
@@ -51,7 +51,7 @@ function initEmployee(db) {
   
 
   router.get('/bytag/:tag', (req, res, next)=>{
-    employeeModel.getEmployeesByTag((req.params.tag || '').split('_'), (err, docs)=>{
+    empModel.getEmployeesByTag((req.params.tag || '').split('_'), (err, docs)=>{
       if(err){
         console.log(err);
         return res.status(500).json({"error":"Error"});
@@ -62,7 +62,7 @@ function initEmployee(db) {
   }); 
   
   router.put('/addtag/:id', (req, res, next)=>{
-    employeeModel.addEmployeeATag((req.body.tag || '').split('|'), req.params.id, (err, rsult)=>{
+    empModel.addEmployeeATag((req.body.tag || '').split('|'), req.params.id, (err, rsult)=>{
       if(err){
         console.log(err);
         return res.status(500).json({"error":"No se puede actualizar"});
@@ -73,7 +73,7 @@ function initEmployee(db) {
   
   router.delete('/delete/:id', function(req, res, next){
     var _id = req.params.id;
-    employeeModel.removeEmployee(_id, (err, result)=>{
+    empModel.removeEmployee(_id, (err, result)=>{
       if(err){
         return res.status(500).json({"error":"No se pudo eliminar datos"});
       }
