@@ -3,20 +3,39 @@ var ObjectID = require('mongodb').ObjectID;
 function employeeModel(db){
   var lib = {};
   var empColl = db.collection('emps');
+
   lib.getEmployees = (handler)=>{
-    // implementar
-    // obtener todos los documentos
+    empColl.find({}).toArray(
+      (err , docs) => {
+        if(err){
+          handler(err, null);
+        }else{
+          handler(null, docs);
+        }
+      }
+     );
     return handler(new Error("No Implementado"), null);
   }
 
   lib.getEmployeesById = (id, handler) => {
-    // implementar
-    // Obtener un Documento solo mostrar
-    // email, phone, name y age
+    empColl.findOne({ "_id": new ObjectId(id)}, (err, doc)=>{
+      if(err){
+        handler(err, null);
+      }else{
+        handler(null, doc);
+      }
+    }); 
     return handler(new Error("No Implementado"), null);
   }
 
   lib.getEmployeesByCompany = (company, handler) => {
+    empColl.findOne(company, (err, doc)=>{
+      if(err){
+        handler(err, null);
+      }else{
+        handler(null, doc);
+      }
+    });
     // implementar
     // solo mostrar name, email, company
     return handler(new Error("No Implementado"), null);
@@ -32,6 +51,14 @@ function employeeModel(db){
   }
 
   lib.getEmployeesByTag = (tag, handler) => {
+    var queryObject= {"tag": {"$in": Array.isArray(tags)? tag: [tag]}};
+    empColl.find(queryObject).toArray((err, docs) => {
+      if(err){
+        handler(err, null);
+      }else{
+        handler(null, docs);
+      }
+    });
     //implementar
     // obtener todos los documentos que contenga 
     // al menos una vez el tag dentro del arreglo
@@ -41,6 +68,15 @@ function employeeModel(db){
   }
 
   lib.addEmployeeATag = ( tag, id, handler) => {
+    var curatedTags = Array.isArray(tag)? tags: [tags];
+    var updateObject = { "$set": { "tag": curatedTags}};
+    empColl.updateOne({"_id": ObjectId(id)}, updateObject, (err, rsult)=>{
+        if(err){
+          handler(err, null);
+        }else{
+          handler(null, rsult.result);
+        }
+    } );
     //Implementar
     //Se requiere agregar a un documento un nuevo tag
     // $push
@@ -48,6 +84,14 @@ function employeeModel(db){
   }
 
   lib.removeEmployee = (id, handler) => {
+    empColl.deleteOne({"_id": ObjectId(id)}, (err, rslt)=>{
+      if(err){
+        console.log(err);
+        handler(err, null);
+      } else {
+        handler(null, rslt.result);
+      }
+    });
     //Implementar
     //Se requiere eliminar un documento de la colección
     return handler(new Error("No Implementado"), null);
