@@ -1,4 +1,4 @@
-var ObjectID = require('mongodb').ObjectID;
+var ObjectId = require('mongodb').ObjectID;
 
 function employeeModel(db){
   var lib = {};
@@ -51,7 +51,7 @@ function employeeModel(db){
   }
 
   lib.getEmployeesByTag = (tag, handler) => {
-    var queryObject= {"tag": {"$in": Array.isArray(tags)? tag: [tag]}};
+    var queryObject= {"tag": {"$in": Array.isArray(tag)? tag: [tag]}};
     empColl.find(queryObject).toArray((err, docs) => {
       if(err){
         handler(err, null);
@@ -68,8 +68,8 @@ function employeeModel(db){
   }
 
   lib.addEmployeeATag = ( tag, id, handler) => {
-    var curatedTags = Array.isArray(tag)? tags: [tags];
-    var updateObject = { "$set": { "tag": curatedTags}};
+    var curatedTags = Array.isArray(tag)? tags: [tag];
+    var updateObject = { "$set": { "tag": curatedTag}};
     empColl.updateOne({"_id": ObjectId(id)}, updateObject, (err, rsult)=>{
         if(err){
           handler(err, null);
